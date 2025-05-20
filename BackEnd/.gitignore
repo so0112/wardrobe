@@ -1,0 +1,16 @@
+## .NET Core 기본
+bin/
+obj/
+*.user
+*.suo
+*.cache
+.vs/
+
+## Visual Studio Code 관련 (Mac에서도 VSCode 쓰므로)
+.vscode/
+
+## Mac OS 관련
+.DS_Store
+
+## 로그 파일
+*.log
