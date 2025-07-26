@@ -43,13 +43,45 @@
 //     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 // }
 
-
-
-// 자습서 참고용 .NET CORE
+// 자습서 보고 만드는 중 .NET CORE
 
 var builder = WebApplication.CreateBuilder(args);
+
+// CORS 정책 이름
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+// CORS 서비스 등록 (React 개발서버 주소 허용)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
+// Swagger 서비스 등록
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
+// CORS 미들웨어 등록
+app.UseCors(MyAllowSpecificOrigins);
+
+// Swagger 미들웨어 등록 (개발 환경에서만)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// HTTPS 리다이렉션
+app.UseHttpsRedirection();
+
+// 라우트 정의
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
